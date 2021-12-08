@@ -1,6 +1,6 @@
 import { FC, useRef, useState } from "react";
 import AtDialog from "./AtDialog";
-import "./editor.less";
+import "./editor.scss";
 
 type User = { name: string; id: string };
 

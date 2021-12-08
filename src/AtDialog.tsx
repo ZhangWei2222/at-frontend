@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useRef } from "react";
-import "./AtDialog.less";
+import "./AtDialog.scss";
 
 type User = { name: string; id: string };
 
