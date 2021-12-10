@@ -5,20 +5,16 @@ type User = { name: string; id: string };
 
 const mockData = [
   {
-    name: "张一鸣",
-    id: "zhangyiming",
+    name: "易烊千玺",
+    id: "yiyangqianxi",
   },
   {
-    name: "张一鸣",
-    id: "whatthehell",
+    name: "王俊凯",
+    id: "wangjunkai",
   },
   {
-    name: "马化腾",
-    id: "ponyma",
-  },
-  {
-    name: "马云",
-    id: "jackmasb",
+    name: "王源",
+    id: "wangyuan",
   },
 ];
 

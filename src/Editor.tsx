@@ -1,6 +1,6 @@
 import { FC, useRef, useState } from "react";
 import AtDialog from "./AtDialog";
-import "./editor.scss";
+import "./Editor.scss";
 
 type User = { name: string; id: string };
 
@@ -24,6 +24,8 @@ const getRangeRect = () => {
   const selection = window.getSelection();
   const range = selection?.getRangeAt(0)!;
   const rect = range.getClientRects()[0];
+  console.log("getRangeRect", range, rect, selection?.toString());
+
   const LINE_HEIGHT = 30;
   return {
     x: rect.x,
@@ -34,10 +36,16 @@ const getRangeRect = () => {
 // 是否展示 @
 const showAt = () => {
   const node = getRangeNode();
+  // 如果没有内容 或者 节点不是文本
   if (!node || node.nodeType !== Node.TEXT_NODE) return false;
   const content = node.textContent || "";
+
+  // 正则：/@([^@\s]*)$/，@表示之后的字串原意表达，即无需转义
+  // 匹配@开头，后面无空白的字段
   const regx = /@([^@\s]*)$/;
   const match = regx.exec(content.slice(0, getCursorIndex()));
+  console.log("showAt", content.slice(0, getCursorIndex()), match);
+
   return match && match.length === 2;
 };
 
@@ -74,6 +82,7 @@ const createAtButton = (user: User) => {
 };
 
 const replaceString = (raw: string, replacer: string) => {
+  console.log("replaceString", raw, replacer);
   return raw.replace(/@([^@\s]*)$/, replacer);
 };
 
@@ -81,13 +90,22 @@ const replaceAtUser = (user: User) => {
   const node = getRangeNode();
   if (node) {
     const content = node?.textContent || "";
+    console.log("node", node, content);
     const endIndex = getCursorIndex();
+    console.log("endIndex", endIndex);
     const preSlice = replaceString(content.slice(0, endIndex), "");
+    console.log("preSlice", preSlice);
     const restSlice = content.slice(endIndex);
+    console.log("restSlice", restSlice);
     const parentNode = node?.parentNode!;
+    console.log("parentNode", parentNode);
     const nextNode = node?.nextSibling;
+    console.log("nextNode", nextNode);
     const previousTextNode = new Text(preSlice);
-    const nextTextNode = new Text("\u200b" + restSlice);
+    console.log("previousTextNode", previousTextNode);
+    // const nextTextNode = new Text("\u200b" + restSlice);
+    const nextTextNode = new Text(restSlice);
+    console.log("nextTextNode", nextTextNode);
     const atButton = createAtButton(user);
     parentNode.removeChild(node);
     if (nextNode) {
@@ -118,6 +136,7 @@ const Editor: FC = () => {
   });
 
   const handkeKeyUp = (e: any) => {
+    // console.log("handkeKeyUp");
     if (showAt()) {
       const position = getRangeRect();
       setPosition(position);
@@ -130,6 +149,7 @@ const Editor: FC = () => {
   };
 
   const handleKeyDown = (e: any) => {
+    // console.log("handleKeyDown");
     if (showDialog) {
       if (
         e.code === "ArrowUp" ||
